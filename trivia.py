@@ -34,35 +34,34 @@ Trivia = [
     }
 ]
 
-###This function was made by Kush Vapiwala
+
+score = 0
+
+
 def run_QandO(trivia):
     global score
-    score = 0
 
     for q in trivia:
-        Qlabel = tk.Label(root, text = q["questions"])
-        Qlabel.pack()
         print(q["questions"])
         for i, option in enumerate(q["options"]):
-            Olable = tk.Label(root, text = f"{i+1}. {option}")
-            Olable.pack()
             print(f"{i+1}. {option}")
-            while True:
-                try:
-                    answer = int(input("Enter your answer: ")) - 1
-                    if answer > 3:
-                        raise ValueError
-                    break
-                except ValueError:
-                    print("enter in a number in range from 1-4")
 
-            correct_answer = q["options"][answer]
-            if correct_answer == q["answer"]:
-                print("Correct!")
-                score += 1
-            else: 
-                print("Incorrect!")
-            print(f"Your final score was {score} points Good job!")
+        while True:
+            try:
+                answer = int(input("Enter your answer: ")) - 1
+                if answer > 3:
+                    raise ValueError
+                break
+            except ValueError:
+                print("enter in a number in range from 1-4")
+
+        correct_answer = q["options"][answer]
+        if correct_answer == q["answer"]:
+            print("Correct!")
+            score += 1
+        else: 
+            print("Incorrect!")
+        print(f"Your final score was {score} points Good job!")
 
 root = tk.Tk()
 root.title("World Geography Quiz")
@@ -72,16 +71,17 @@ frame.pack()
 begin_game_btn = tk.Button(frame, text= "Start Game", command=lambda:run_QandO(Trivia))
 begin_game_btn.pack()
 
-answer_frame = tk.Frame(root)
-answer_frame.pack()
+Qlabel = tk.Label(root, text = "")
+Qlabel.pack()
 
-answer_label = tk.Label(answer_frame, text= "Enter your answer here(1-4)")
-answer_label.pack()
+#chatgpt start
+option_buttons = []
+for i in range(4):
+    Obutton = tk.Button(root, text = "")
+    Obutton.pack()
+    option_buttons.append(Obutton)
+#chatgpt end
 
-answer_entry = tk.Entry(answer_frame)
-answer_entry.pack()
-
-answer_btn = tk.Button(frame, text = "Confirm answer")
-answer_btn.pack()
+answer_label = tk.Label(root, text = "")
 
 root.mainloop()
