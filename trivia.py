@@ -37,19 +37,22 @@ Trivia = [
 
 score = 0
 QSearch = ""
+Qindex = 0
 AnsIndex = 0
 
 def run_QandO(trivia):
     global score
     global QSearch
-
-    for q in trivia:
+    
+    if Qindex < len(Trivia):
+        q = Trivia[Qindex]
         QSearch = q
         Qlabel.config(text=q["questions"])
+        
         print(q["questions"])
         for i, option in enumerate(q["options"]):
             AnsIndex = i
-            option_buttons[i].config(text=option, command=lambda:check_answer(QSearch, AnsIndex))
+            option_buttons[i].config(text=option, command=lambda q=QSearch, Idx=i :check_answer(q, Idx)) #AI was used to debug the lambda
             print(f"{i+1}. {option}")
 
      
@@ -64,6 +67,7 @@ def check_answer(QSearch, AnsIndex):
             answer_label.config(text="Incorrect!")
         
         AnsIndex += 1
+        Qindex += 1
 
 
 
