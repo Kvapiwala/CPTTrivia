@@ -36,40 +36,42 @@ Trivia = [
 
 
 score = 0
-
+QSearch = ""
+AnsIndex = 0
 
 def run_QandO(trivia):
     global score
+    global QSearch
 
     for q in trivia:
+        QSearch = q
+        Qlabel.config(text=q["questions"])
         print(q["questions"])
         for i, option in enumerate(q["options"]):
+            AnsIndex = i
+            option_buttons[i].config(text=option, command=lambda:check_answer(QSearch, AnsIndex))
             print(f"{i+1}. {option}")
 
-        while True:
-            try:
-                answer = int(input("Enter your answer: ")) - 1
-                if answer > 3:
-                    raise ValueError
-                break
-            except ValueError:
-                print("enter in a number in range from 1-4")
-
-        correct_answer = q["options"][answer]
-        if correct_answer == q["answer"]:
-            print("Correct!")
+     
+def check_answer(QSearch, AnsIndex):
+        global score
+        
+        correct_answer = QSearch["options"][AnsIndex]
+        if correct_answer == QSearch["answer"]:
+            answer_label.config(text="Correct!")
             score += 1
         else: 
-            print("Incorrect!")
-        print(f"Your final score was {score} points Good job!")
+            answer_label.config(text="Incorrect!")
+        
+        AnsIndex += 1
+
+
 
 root = tk.Tk()
 root.title("World Geography Quiz")
 frame = tk.Frame(root)
 frame.pack()
 
-begin_game_btn = tk.Button(frame, text= "Start Game", command=lambda:run_QandO(Trivia))
-begin_game_btn.pack()
 
 Qlabel = tk.Label(root, text = "")
 Qlabel.pack()
@@ -83,5 +85,9 @@ for i in range(4):
 #chatgpt end
 
 answer_label = tk.Label(root, text = "")
+answer_label.pack()
+
+begin_game_btn = tk.Button(frame, text= "Start Game", command=lambda:run_QandO(Trivia))
+begin_game_btn.pack()
 
 root.mainloop()
