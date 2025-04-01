@@ -1,5 +1,4 @@
 import tkinter as tk
-import tkinter.scrolledtext as tksc
 
 Trivia = [
     {
@@ -20,7 +19,7 @@ Trivia = [
     {
         "questions": "What country does France share its longest land border with?",
         "options": ["United States", "Germany", "Brazil", "Africa"],
-        "answer": "Africa"
+        "answer": "Germany"
     },
     {
         "questions": "What is considered the country that never gets dark?",
@@ -31,57 +30,89 @@ Trivia = [
         "questions": "What is a city in Brazil?",
         "options": ["Salvador", "Puebla", "Monterrey", "Bilbao"],
         "answer": "Salvador"
+    },
+    {
+        "questions": "What the largest city in the United States?",
+        "options": ["Los Angeles", "Houston", "New York City", "Miami"],
+        "answer": "New York City"
+    },
+    {
+        "questions": "What Country is NOT part of North America",
+        "options": ["United States", "Panama", "Mexico", "Canada"],
+        "answer": "Panama"
     }
 ]
 
-###This function was made by Kush Vapiwala
-def run_QandO(trivia):
+
+score = 0
+QSearch = ""
+Qindex = 0
+AnsIndex = 0
+
+def run_QandO(Trivia):
     global score
-    score = 0
+    global QSearch
+    
+    begin_game_btn.pack_forget()
 
-    for q in trivia:
-        Qlabel = tk.Label(root, text = q["questions"])
-        Qlabel.pack()
-        print(q["questions"])
-        for i, option in enumerate(q["options"]):
-            Olable = tk.Label(root, text = f"{i+1}. {option}")
-            Olable.pack()
-            print(f"{i+1}. {option}")
-            while True:
-                try:
-                    answer = int(input("Enter your answer: ")) - 1
-                    if answer > 3:
-                        raise ValueError
-                    break
-                except ValueError:
-                    print("enter in a number in range from 1-4")
+    if Qindex < len(Trivia):
+        QSearch = Trivia[Qindex]
+        Qlabel.config(text=QSearch["questions"])
+        
+        for i, option in enumerate(QSearch["options"]):
+            AnsIndex = i
+            option_buttons[i].pack()
+            option_buttons[i].config(text=option, command=lambda q=QSearch, Idx=i :check_answer(q, Idx)) #AI was used to debug the lambda
 
-            correct_answer = q["options"][answer]
-            if correct_answer == q["answer"]:
-                print("Correct!")
-                score += 1
-            else: 
-                print("Incorrect!")
-            print(f"Your final score was {score} points Good job!")
+     
+def check_answer(QSearch, AnsIndex):
+        global score
+        global Qindex
+
+        correct_answer = QSearch["options"][AnsIndex]
+        if correct_answer == QSearch["answer"]:
+            answer_label.config(text="Correct!")
+            score += 1
+        else: 
+            answer_label.config(text="Incorrect!")
+            
+        Qindex += 1
+
+        if Qindex < len(Trivia):
+            run_QandO(Trivia)
+        else:
+            answer_label.config(text=f"You finished the quiz! Your final score is: {score} points!")
+            for i in range (4):
+                option_buttons[i].pack_forget()
+
+            begin_game_btn.pack()
+            begin_game_btn.config(text = "Play Again?")
+            Qlabel.config(text= "")
+            Qindex = 0
+            score = 0
+
 
 root = tk.Tk()
 root.title("World Geography Quiz")
 frame = tk.Frame(root)
 frame.pack()
 
+
+Qlabel = tk.Label(root, text = "")
+Qlabel.pack()
+
+#chatgpt start
+option_buttons = []
+for i in range(4):
+    Obutton = tk.Button(root, text = "")
+    option_buttons.append(Obutton)
+#chatgpt end
+
+answer_label = tk.Label(root, text = "")
+answer_label.pack()
+
 begin_game_btn = tk.Button(frame, text= "Start Game", command=lambda:run_QandO(Trivia))
 begin_game_btn.pack()
 
-answer_frame = tk.Frame(root)
-answer_frame.pack()
-
-answer_label = tk.Label(answer_frame, text= "Enter your answer here(1-4)")
-answer_label.pack()
-
-answer_entry = tk.Entry(answer_frame)
-answer_entry.pack()
-
-answer_btn = tk.Button(frame, text = "Confirm answer")
-answer_btn.pack()
 
 root.mainloop()
