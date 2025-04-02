@@ -80,8 +80,10 @@ def check_answer(QSearch, AnsIndex):
 
         if Qindex < len(Trivia):
             run_QandO(Trivia)
+            SLabel.config(text= f"Your current score: {score} points.")
         else:
-            answer_label.config(text=f"You finished the quiz! Your final score is: {score} points!")
+            SLabel.config(text=f"You finished the quiz! Your final score is: {score} points!")
+            answer_label.config(text= "")
             for i in range (4):
                 option_buttons[i].pack_forget()
 
@@ -97,9 +99,13 @@ root.title("World Geography Quiz")
 frame = tk.Frame(root)
 frame.pack()
 
+SLabel = tk.Label(root, text = "")
+SLabel.pack()
+
 
 Qlabel = tk.Label(root, text = "")
 Qlabel.pack()
+
 
 #chatgpt start
 option_buttons = []
